@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = 3001;
 
+//Database connection
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -17,7 +18,7 @@ const db = mysql.createConnection({
 app.use(cors());
 
 //Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json()); //
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Create the record
@@ -40,7 +41,7 @@ app.post('/create', (req, res) => {
     )
 });
 
-//View the records
+//View all records
 app.get('/employees', (req, res) => {
     db.query("SELECT * FROM employees", (err, result) => {
         if (err) {
@@ -52,13 +53,11 @@ app.get('/employees', (req, res) => {
     })
 })
 
-//View the records by id
-
+//View records by id
 app.get('/employee/:id', (req, res) => {
     db.query('SELECT * FROM employees WHERE id=?', [req.params.id], (err, rows) => {
         if (err) {
             console.log(err);
-
         } else {
             res.send(rows);
         }
@@ -68,11 +67,14 @@ app.get('/employee/:id', (req, res) => {
 
 
 //Update the records by id
-
 app.put('/update', (req, res) => {
     const id = req.body.id;
     const wage = req.body.wage;
-    db.query('UPDATE employees SET wage=? WHERE id=?', [wage, id], (err, result) => {
+    const name = req.body.name;
+    const age = req.body.age;
+    const country = req.body.country;
+
+    db.query('UPDATE employees SET name=?, age=?, country=?, wage=? WHERE id=?', [name, age, country, wage, id], (err, result) => {
         if (err) {
             console.log(err);
         } else {
@@ -81,8 +83,7 @@ app.put('/update', (req, res) => {
     })
 })
 
-//Delete the record from the database
-
+//Delete record from the database
 app.delete('/delete/:id', (req, res) => {
     const id = req.params.id;
     db.query("DELETE FROM employees WHERE id = ?", id, (err, result) => {

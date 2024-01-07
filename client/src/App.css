@@ -1,8 +1,36 @@
-.App {
+.App{
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* .App{
+  background-color: #4fa4eb;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+*/
+
+h1 {
+  color: #333;
+}
+
+
+label {
+  margin: 4px 0;
+}
+
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 
 .information {
   display: flex;
@@ -14,8 +42,9 @@
 }
 
 input {
-  width: 300px;
-  height: 50px;
+  margin: 10px;
+  width: 200px;
+  height: 30px;
   font-size: 20px;
   padding-left: 10px;
   margin: 5px;
@@ -23,13 +52,20 @@ input {
 }
 
  button {
-  width: 320px;
-  height: 50px;
+
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 90px;
+  height: 38px;
   margin-top: 15px;
 } 
 
  button:hover {
-  cursor: pointer;
+  cursor:pointer;
+  background-color: #45a049;
 }
 
 .employees {
@@ -51,4 +87,21 @@ input {
 
 .employee h3 {
   margin: 20px;
+}
+
+#emp{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: whitesmoke;
+  color: darkolivegreen;
+
+}
+
+.eid{
+    width: 80px;
+    height: 25px;
 }
