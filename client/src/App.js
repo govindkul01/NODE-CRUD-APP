@@ -3,8 +3,7 @@ import { useState } from "react";
 import Axios from "axios";
 
 function App() {
-
-  const[id, setId] = useState(0);
+  const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [country, setCountry] = useState("");
@@ -18,6 +17,8 @@ function App() {
   const [newWage, setNewWage] = useState(0);
 
   const [employeeList, setEmployeeList] = useState([]);
+
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
 
   //Adding employee to database
   const addEmployee = () => {
@@ -53,23 +54,12 @@ function App() {
   };
 
   //View employee by id
-  const getEmployeeById = (employeeId) =>{
-    Axios.get(`http://localhost:3001/employee/${employeeId}`).then(
+  const getEmployeeById = (id) => {
+    Axios.get(`http://localhost:3001/employee/${id}`).then(
       (response) => {
-      setEmployeeList(response.data);
-      //alert("Employee loaded successfully!");
-    });
-  }
-
-  //Update employee field with existing id
-  const updateEmployee = (id, updatedFields) => {
-    Axios.put("http://localhost:3001/update", { id, ...updatedFields }).then(
-      (response) => {
-        setEmployeeList(
-          employeeList.map((val) =>
-            val.id === id ? { ...val, ...updatedFields } : val
-          )
-        );
+        console.log(response.data);
+        setEmployeeList(response.data);
+        alert("Employee loaded successfully!");
       }
     );
   };
@@ -85,68 +75,97 @@ function App() {
     });
   };
 
+  const updateDetails = (id) => {
+    console.log('Employee id: ', id);
+        const updatedFields = {
+      name: newName,
+      age: parseInt(newAge),
+      country: newCountry,
+      position: newPosition,
+      wage: parseInt(newWage),
+    };
+    updateEmployee(id, updatedFields);
+  };
+
+  //Update employee field with existing id
+  const updateEmployee = (id, updatedFields) => {
+    Axios.put(`http://localhost:3001/update/${id}`, { ...updatedFields }).then(
+      (response) => {
+        setEmployeeList(
+          employeeList.map((val) =>
+            val.id === id ? { ...val, ...updatedFields } : val
+          )
+        );
+          UpdateForm(); //close the update form after update
+      }
+    );
+  };
+
+  const UpdateForm = (id) => {
+    setShowUpdateForm(!showUpdateForm);
+    setId(id);
+  };
+
   return (
     //Field inputs to take from the user
     <div className="App">
-      <h1 id="emp" >Employee Management System</h1>
+      <h1 id="emp">Employee Management System</h1>
       <form className="employee-form">
-      <div className="information">
-        <label>Name: </label>        
-        <input
-          type="text"
-          onChange={(event) => {
-            setName(event.target.value);
-          }}
-        />
-        <label>Age: </label>
-        <input
-          type="number"
-          onChange={(event) => {
-            setAge(event.target.value);
-          }}
-        />
-        <label>Country: </label>
-        <input
-          type="text"
-          onChange={(event) => {
-            setCountry(event.target.value);
-          }}
-        />
-        <label>Position: </label>
-        <input
-          type="text"
-          onChange={(event) => {
-            setPosition(event.target.value);
-          }}
-        />
-        <label>Wage: </label>
-        <input
-          type="number"
-          onChange={(event) => {
-            setWage(event.target.value);
-          }}
-        />
-        <button type="button" 
-        onClick={addEmployee}>
-          Add Employee
+        <div className="information">
+          <label>Name: </label>
+          <input
+            type="text"
+            onChange={(event) => {
+              setName(event.target.value);
+            }}
+          />
+          <label>Age: </label>
+          <input
+            type="number"
+            onChange={(event) => {
+              setAge(event.target.value);
+            }}
+          />
+          <label>Country: </label>
+          <input
+            type="text"
+            onChange={(event) => {
+              setCountry(event.target.value);
+            }}
+          />
+          <label>Position: </label>
+          <input
+            type="text"
+            onChange={(event) => {
+              setPosition(event.target.value);
+            }}
+          />
+          <label>Wage: </label>
+          <input
+            type="number"
+            onChange={(event) => {
+              setWage(event.target.value);
+            }}
+          />
+            
+          <button type="button" onClick={addEmployee}>
+            Add Employee
           </button>
-      </div>
+        </div>
       </form>
 
       <div className="employees">
         <button onClick={getEmployees}>Show Employees</button>
-        <input className="eid"
+        <input 
         type="number" 
-        placeholder="enter id" 
-        onChange={(event) => {
-           setId(event.target.value);
-        }}
-        />
-        <div>
-        <button onClick={() => {
-          getEmployeeById(id);
-        }}>View Employee</button>
-        </div>
+            placeholder="eid" 
+            onChange={(event) =>{
+              setId(event.target.value);
+            }}
+            />
+          <button onClick={()=>{
+            getEmployeeById(id)
+          }}>view employee</button>
         {employeeList.map((val, key) => {
           return (
             <div className="employee" key={key}>
@@ -157,70 +176,72 @@ function App() {
                 <h3>Position: {val.position}</h3>
                 <h3>Wages: {val.wage}</h3>
               </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="New Name..."
-                  onChange={(event) => {
-                    setNewName(event.target.value);
-                  }}
-                />
-                <input
-                  type="number"
-                  placeholder="New Age..."
-                  onChange={(event) => {
-                    setNewAge(event.target.value);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="New Country..."
-                  onChange={(event) => {
-                    setNewCountry(event.target.value);
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="New Position..."
-                  onChange={(event) => {
-                    setNewPosition(event.target.value);
-                  }}
-                />
-                <input
-                  type="number"
-                  placeholder="New Wage..."
-                  onChange={(event) => {
-                    setNewWage(event.target.value);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    updateEmployee(val.id, {
-                      name: newName,
-                      age: newAge,
-                      country: newCountry,
-                      position: newPosition,
-                      wage: newWage,
-                    });
-                  }}
-                >
-                  Update
-                </button>
+              
+               <div>
+                <button onClick={() => UpdateForm(val.id)}>Update</button>
 
-                <button
-                  onClick={() => {
-                    deleteEmployee(val.id);
-                  }}
-                >
-                  Delete
-                </button>
+                <div>
+                  <button
+                    onClick={() => {
+                      deleteEmployee(val.id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                  
+                </div>
               </div>
             </div>
           );
         })}
-        ;
       </div>
+      
+      
+      {showUpdateForm && (
+        <div className="update-form">
+          <input
+            type="text"
+            placeholder="New Name..."
+            onChange={(event) => {
+              setNewName(event.target.value);
+            }}
+          />
+          <input
+            type="number"
+            placeholder="New Age..."
+            onChange={(event) => {
+              setNewAge(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="New Country..."
+            onChange={(event) => {
+              setNewCountry(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="New Position..."
+            onChange={(event) => {
+              setNewPosition(event.target.value);
+            }}
+            
+          />
+          <input
+            type="number"
+            placeholder="New Wage..."
+            onChange={(event) => {
+              setNewWage(event.target.value);
+            }}
+          />
+          <button onClick= {()=> { 
+            updateDetails(id);
+          }}>Update</button>
+        </div>
+      )}
     </div>
   );
 }
+
 export default App;

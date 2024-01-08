@@ -18,7 +18,7 @@ const db = mysql.createConnection({
 app.use(cors());
 
 //Middleware
-app.use(bodyParser.json()); //
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Create the record
@@ -67,14 +67,17 @@ app.get('/employee/:id', (req, res) => {
 
 
 //Update the records by id
-app.put('/update', (req, res) => {
-    const id = req.body.id;
+app.put('/update/:id', (req, res) => {
+    console.log('received Put request', req.body);
+    const id = req.params.id;
+     const name = req.body.name;
+     const age = req.body.age;
+     const country = req.body.country;
+     const position = req.body.position;
     const wage = req.body.wage;
-    const name = req.body.name;
-    const age = req.body.age;
-    const country = req.body.country;
 
-    db.query('UPDATE employees SET name=?, age=?, country=?, wage=? WHERE id=?', [name, age, country, wage, id], (err, result) => {
+
+    db.query('UPDATE employees SET name=?, age=?, country=?, position=?,wage=? WHERE id=?', [name, age, country, position, wage, id], (err, result) => {
         if (err) {
             console.log(err);
         } else {
