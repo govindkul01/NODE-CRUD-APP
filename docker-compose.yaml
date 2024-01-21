@@ -1,0 +1,93 @@
+version: "3.8"
+
+services:
+  #Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: mysqlcontainer
+    command: --default-authentication-plugin=caching_sha2_password
+    #restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+       MYSQL_DATABASE: emp_system
+       MYSQL_ROOT_PASSWORD: root
+       SERVICE_NAME: mysql
+    networks:
+      - internalnet
+    volumes:
+      - ./database/data.sql:/docker-entrypoint-initdb.d/0_data.sql
+      -  ./mysql-data:/var/lib/mysql   
+
+  #Server service
+  nodeapp:
+     container_name: nodeappcontainer
+     build: ./server
+     image: nodeapp:v1
+     ports:
+       - "3001:3001"
+
+     environment:
+       DB_HOST: mysql
+       DB_PORT: 3306
+       DB_USER: root
+       DB_PASSWORD: root
+       DB_NAME: emp_system
+       DB_CONNECTION_LIMIT: 20
+       SERVER_PORT: 3001
+     depends_on:
+      - mysql
+     networks:
+      - internalnet
+     command: ["npm", "run", "dev"]
+     volumes:
+      - ./server:/usr/src/app
+
+     develop:
+      # specify the files to watch for changes
+      watch:
+        # it'll watch for changes in package.json and package-lock.json and rebuild the container and image if there are any changes
+        - path: ./server/package.json
+          action: rebuild
+        - path: ./server/package-lock.json
+          action: rebuild
+
+        # it'll watch for changes in the backend directory and sync the changes with the container real time
+        - path: ./server
+          target: /app
+          action: sync
+
+  #Client Service 
+  reactapp:
+     container_name: reactappcontainer
+     build: ./client
+     image: reactapp:v1
+     ports:
+       - "3000:3000"
+  
+     depends_on: 
+      - nodeapp
+     networks:
+      - internalnet
+     volumes:
+      - ./client:/usr/src/app
+      - /app/node_modules
+
+     develop:
+      # we specify the files to watch for changes
+      watch:
+        # it'll watch for changes in package.json and package-lock.json and rebuild the container if there are any changes
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client/package-lock.json
+          action: rebuild
+        # it'll watch for changes in the frontend directory and sync the changes with the container real time
+        - path: ./client
+          target: /app
+          action: sync
+    
+#create a network so that reactapp, mysql and nodeapp services are on the same network i.e. internalnet
+networks:
+  internalnet:
+    driver: bridge
+

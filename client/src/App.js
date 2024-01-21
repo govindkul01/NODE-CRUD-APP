@@ -4,37 +4,34 @@ import Axios from "axios";
 
 function App() {
   const [id, setId] = useState(0);
-  const [name, setName] = useState("");
+  const [fname, setFname] = useState("");
   const [age, setAge] = useState(0);
   const [country, setCountry] = useState("");
   const [position, setPosition] = useState("");
   const [wage, setWage] = useState(0);
 
-  const [newName, setNewName] = useState("");
+  const [newFname, setNewFname] = useState("");
   const [newAge, setNewAge] = useState(0);
   const [newCountry, setNewCountry] = useState("");
   const [newPosition, setNewPosition] = useState("");
   const [newWage, setNewWage] = useState(0);
 
   const [employeeList, setEmployeeList] = useState([]);
-
   const [showUpdateForm, setShowUpdateForm] = useState(false);
 
-  //Adding employee to database
+  //Add employee to database
   const addEmployee = () => {
     Axios.post("http://localhost:3001/create", {
-      name: name,
+      fname: fname,
       age: age,
       country: country,
       position: position,
       wage: wage,
     }).then(() => {
-      //promise
       setEmployeeList([
-        //array destructuring
         ...employeeList,
         {
-          name: name,
+          fname: fname,
           age: age,
           country: country,
           position: position,
@@ -55,13 +52,11 @@ function App() {
 
   //View employee by id
   const getEmployeeById = (id) => {
-    Axios.get(`http://localhost:3001/employee/${id}`).then(
-      (response) => {
-        console.log(response.data);
-        setEmployeeList(response.data);
-        alert("Employee loaded successfully!");
-      }
-    );
+    Axios.get(`http://localhost:3001/employee/${id}`).then((response) => {
+      console.log(response.data);
+      setEmployeeList(response.data);
+      alert("Employee loaded successfully!");
+    });
   };
 
   //Delete employee from db
@@ -76,9 +71,9 @@ function App() {
   };
 
   const updateDetails = (id) => {
-    console.log('Employee id: ', id);
-        const updatedFields = {
-      name: newName,
+    console.log("Employee id: ", id);
+    const updatedFields = {
+      fname: newFname,
       age: parseInt(newAge),
       country: newCountry,
       position: newPosition,
@@ -96,7 +91,7 @@ function App() {
             val.id === id ? { ...val, ...updatedFields } : val
           )
         );
-          UpdateForm(); //close the update form after update
+        UpdateForm(); //close the update form after update
       }
     );
   };
@@ -116,7 +111,7 @@ function App() {
           <input
             type="text"
             onChange={(event) => {
-              setName(event.target.value);
+              setFname(event.target.value);
             }}
           />
           <label>Age: </label>
@@ -147,63 +142,75 @@ function App() {
               setWage(event.target.value);
             }}
           />
-            
-          <button type="button" onClick={addEmployee}>
-            Add Employee
-          </button>
         </div>
       </form>
 
       <div className="employees">
-        <button onClick={getEmployees}>Show Employees</button>
-        <input 
-        type="number" 
-            placeholder="eid" 
-            onChange={(event) =>{
+        <div className="btn-container">
+          <button className="btn" onClick={addEmployee}>
+            Add Employee
+          </button>
+          <button className="btn" onClick={getEmployees}>
+            Show Employees
+          </button>
+
+          <button
+            className="btn"
+            onClick={() => {
+              getEmployeeById(id);
+            }}
+          >
+            view employee
+          </button>
+          <input
+            type="number"
+            className="eid"
+            placeholder="enter id"
+            onChange={(event) => {
               setId(event.target.value);
             }}
-            />
-          <button onClick={()=>{
-            getEmployeeById(id)
-          }}>view employee</button>
+          />
+        </div>
+
         {employeeList.map((val, key) => {
           return (
             <div className="employee" key={key}>
               <div>
-                <h3>Name: {val.name}</h3>
+                <h3>Name: {val.fname}</h3>
                 <h3>Age: {val.age}</h3>
                 <h3>Country: {val.country}</h3>
                 <h3>Position: {val.position}</h3>
                 <h3>Wages: {val.wage}</h3>
               </div>
-              
-               <div>
-                <button onClick={() => UpdateForm(val.id)}>Update</button>
+
+              <div>
+                <button id="upd" onClick={() => UpdateForm(val.id)}>
+                  Update
+                </button>
 
                 <div>
                   <button
+                    id="dlt"
                     onClick={() => {
                       deleteEmployee(val.id);
                     }}
                   >
                     Delete
                   </button>
-                  
                 </div>
               </div>
             </div>
           );
         })}
       </div>
-      
-      
+
       {showUpdateForm && (
         <div className="update-form">
           <input
             type="text"
             placeholder="New Name..."
             onChange={(event) => {
-              setNewName(event.target.value);
+              setNewFname(event.target.value);
             }}
           />
           <input
@@ -226,7 +233,6 @@ function App() {
             onChange={(event) => {
               setNewPosition(event.target.value);
             }}
-            
           />
           <input
             type="number"
@@ -235,9 +241,13 @@ function App() {
               setNewWage(event.target.value);
             }}
           />
-          <button onClick= {()=> { 
-            updateDetails(id);
-          }}>Update</button>
+          <button
+            onClick={() => {
+              updateDetails(id);
+            }}
+          >
+            Update
+          </button>
         </div>
       )}
     </div>

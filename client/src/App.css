@@ -1,10 +1,117 @@
 .App{
+
   max-width: 600px;
   margin: 50px auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   text-align: center;
+  background-color: #f1f1f1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: #555;
+  text-decoration: none;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  text-transform: none;
+  
+  &:hover {
+    box-shadow: 0 14px 26px -12px rgba(0,0,0,0.42), 0 4px 23px 0px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.2);
+  }
+  &:active {
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,0.2), 0 8px 10px 1px rgba(0,0,0,0.14), 0 3px 14px 2px rgba(0,0,0,0.12);
+  }
+  &:focus {
+    outline: 0;
+  }
+  &:before { 
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: -1;
+  }
+  &:hover:before {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  &:active:before {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  &:focus:before {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  &:after { 
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: -1;
+  }
+  &:hover:after {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  &:active:after {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  &:focus:after {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  &:before, &:after {
+    opacity: 0;
+  }
+  &:hover:before, &:hover:after {
+    opacity: 1;
+  }
+  &:active:before, &:active:after {
+    opacity: 1;
+  }
+  &:focus:before, &:focus:after {
+    opacity: 1;
+  }
+  @media (max-width: 600px) {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+  }
+  @media (max-width: 400px) {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  @media screen and (max-width: 600px) {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    border: 0;
+    border-radius: 0;
+    text-align: center;
+    background-color: transparent;
+    box-shadow: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
 }
 
 /* .App{
@@ -18,6 +125,11 @@
 
 h1 {
   color: #333;
+  font-size: 32px;
+  
+  text-align: center;
+  margin-bottom: 20px;
+
 }
 
 
@@ -48,12 +160,21 @@ input {
   font-size: 20px;
   padding-left: 10px;
   margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  text-align: center;
+
+
+
+
 
 }
 
  button {
 
   background-color: #4caf50;
+  background-color: tomato;
   color: white;
   border: none;
   border-radius: 3px;
@@ -63,9 +184,40 @@ input {
   margin-top: 15px;
 } 
 
+#upd{
+
+  margin-left: 160px;
+  margin-top: 2px;
+}
+
+#dlt{
+  margin-left: 160px;
+}
+
  button:hover {
   cursor:pointer;
   background-color: #45a049;
+}
+
+.btn-container{
+  display: flex;
+}
+
+.btn{
+  width: 110px;
+  height: 55px;
+  padding: 10px 20px;
+  margin-right: 10px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:last-child{
+  margin-right: 0;
 }
 
 .employees {
@@ -83,10 +235,22 @@ input {
   display: flex;
   padding: 10px;
   font-family: 'Courier New', Courier, monospace;
+  justify-content: space-between;
 }
 
+
 .employee h3 {
-  margin: 20px;
+  margin: 1px;
+  font-size: 13px;
+  text-align: justify;
+  padding: 4px;
+   border-radius: 2px;
+   background-color: white;
+   color: black;
+   
+   
+
+
 }
 
 #emp{
@@ -102,6 +266,13 @@ input {
 }
 
 .eid{
-    width: 80px;
-    height: 25px;
+   width: 50px;
+    height: 15px;
+    font-size: 10px;
+    text-align: center;
+    display: flexbox;
+    padding: 5px;
+    margin-top: 40px;
+
+
 }
